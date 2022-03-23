@@ -50,79 +50,9 @@
       </div>
     </div>
     <script>
-      async function getData() {
-        // var col = [];
-        var searchText = document.getElementById("search").value;
-        // input.addEventListener("keyup", function (event) {
-        //   // Number 13 is the "Enter" key on the keyboard
-        //   if (event.keyCode === 13) {
-        //     // Cancel the default action, if needed
-        //     event.preventDefault();
-        //     // Trigger the button element with a click
-        //     document.getElementById("myBtn").click();
-        //   }
-        // });
-        const response = await fetch(`http://api.alquran.cloud/v1/search/${searchText}/all/id`);
-        var terjemahan = await response.json();
-        // for (let i = 0; i < terjemahan.data.matches.length; i++) {
-        // console.log(terjemahan.data.matches[i].surah.name);
-        // console.log(terjemahan.data.matches[i].numberInSurah);
-        // console.log(terjemahan.data.matches[i].text);
-        // }
-        document.getElementById("nomor0").textContent = 0 + 1;
-        document.getElementById("surahName0").textContent = terjemahan.data.matches[0].surah.name;
-        document.getElementById("ayat0").textContent = terjemahan.data.matches[0].numberInSurah;
-        document.getElementById("textTerjemahan0").textContent = terjemahan.data.matches[0].text;
-
-        // document.getElementById("nomor1").textContent = 1 + 1;
-        // document.getElementById("surahName1").textContent = terjemahan.data.matches[1].surah.name;
-        // document.getElementById("ayat1").textContent = terjemahan.data.matches[1].numberInSurah;
-        // document.getElementById("textTerjemahan1").textContent = terjemahan.data.matches[1].text;
-
-        // document.getElementById("nomor2").textContent = 2 + 1;
-        // document.getElementById("surahName2").textContent = terjemahan.data.matches[2].surah.name;
-        // document.getElementById("ayat2").textContent = terjemahan.data.matches[2].numberInSurah;
-        // document.getElementById("textTerjemahan2").textContent = terjemahan.data.matches[2].text;
-
-        // document.getElementById("nomor3").textContent = 3 + 1;
-        // document.getElementById("surahName3").textContent = terjemahan.data.matches[3].surah.name;
-        // document.getElementById("ayat3").textContent = terjemahan.data.matches[3].numberInSurah;
-        // document.getElementById("textTerjemahan3").textContent = terjemahan.data.matches[3].text;
-
-        // document.getElementById("nomor4").textContent = 4 + 1;
-        // document.getElementById("surahName4").textContent = terjemahan.data.matches[4].surah.name;
-        // document.getElementById("ayat4").textContent = terjemahan.data.matches[4].numberInSurah;
-        // document.getElementById("textTerjemahan4").textContent = terjemahan.data.matches[4].text;
-
-        // document.getElementById("nomor5").textContent = 5 + 1;
-        // document.getElementById("surahName5").textContent = terjemahan.data.matches[5].surah.name;
-        // document.getElementById("ayat5").textContent = terjemahan.data.matches[5].numberInSurah;
-        // document.getElementById("textTerjemahan5").textContent = terjemahan.data.matches[5].text;
-
-        // document.getElementById("nomor6").textContent = 6 + 1;
-        // document.getElementById("surahName6").textContent = terjemahan.data.matches[6].surah.name;
-        // document.getElementById("ayat6").textContent = terjemahan.data.matches[6].numberInSurah;
-        // document.getElementById("textTerjemahan6").textContent = terjemahan.data.matches[6].text;
-
-        // document.getElementById("nomor7").textContent = 7 + 1;
-        // document.getElementById("surahName7").textContent = terjemahan.data.matches[7].surah.name;
-        // document.getElementById("ayat7").textContent = terjemahan.data.matches[7].numberInSurah;
-        // document.getElementById("textTerjemahan7").textContent = terjemahan.data.matches[7].text;
-
-        // document.getElementById("nomor8").textContent = 8 + 1;
-        // document.getElementById("surahName8").textContent = terjemahan.data.matches[8].surah.name;
-        // document.getElementById("ayat8").textContent = terjemahan.data.matches[8].numberInSurah;
-        // document.getElementById("textTerjemahan8").textContent = terjemahan.data.matches[8].text;
-
-        // document.getElementById("nomor9").textContent = 9 + 1;
-        // document.getElementById("surahName9").textContent = terjemahan.data.matches[9].surah.name;
-        // document.getElementById("ayat9").textContent = terjemahan.data.matches[9].numberInSurah;
-        // document.getElementById("textTerjemahan9").textContent = terjemahan.data.matches[9].text;
-
-        document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
-
-        getData();
-      }
+      const params = new URLSearchParams(window.location.search);
+      params.get("name");
+      console.log(params);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
