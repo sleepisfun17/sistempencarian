@@ -23,14 +23,28 @@
                   ></path>
                 </svg>
               </button>
-              <input id="keyword" type="text" name="keyword" onsubmit="getData()" />
+              <input id="keyword" type="text" name="keyword" />
+              <!-- <audio id="player" controls></audio>
+              <script>
+                const player = document.getElementById("player");
+
+                const handleSuccess = function (stream) {
+                  if (window.URL) {
+                    player.srcObject = stream;
+                  } else {
+                    player.src = stream;
+                  }
+                };
+
+                navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
+              </script> -->
             </div>
 
             <div class="container mt-4">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                   <h2>
-                    Daftar Surat dan Ayat :
+                    Daftar Surat dan Ayat <%= transcription %>:
                     <h5 id="jumlahTerjemahan" style=""></h5>
                   </h2>
 
@@ -45,6 +59,7 @@
                     </thead>
                     <tbody id="myTB"></tbody>
                   </table>
+
                   <script>
                     async function handleSubmit(event) {
                       event.preventDefault();
@@ -59,35 +74,84 @@
                       var terjemahan = await response.json();
                       var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
                       document.getElementById("myTB").innerHTML = table;
+                      const limit = 250;
 
-                      for (let i = 0; i < terjemahan.data.matches.length; i++) {
-                        // console.log(terjemahan.data.matches[i].surah.name);
-                        // console.log(terjemahan.data.matches[i].numberInSurah);
-                        // console.log(terjemahan.data.matches[i].text);
-                        var table = "<tr><th>" + (i + 1) + "</th><td>" + terjemahan.data.matches[i].surah.name + "</td><td>" + terjemahan.data.matches[i].numberInSurah + "</td><td>" + terjemahan.data.matches[i].text + "</td></tr>";
-                        document.getElementById("myTB").innerHTML += table;
+                      if (terjemahan.data.matches.length > limit) {
+                        for (let i = 0; i < limit; i++) {
+                          var table =
+                            "<tr><th>" +
+                            (i + 1) +
+                            '</th><td style="font-size: 30px;">' +
+                            terjemahan.data.matches[i].surah.name +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].numberInSurah +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].text +
+                            "</td></tr>";
+                          document.getElementById("myTB").innerHTML += table;
+                        }
+                      } else {
+                        for (let i = 0; i < terjemahan.data.matches.length; i++) {
+                          var table =
+                            "<tr><th>" +
+                            (i + 1) +
+                            '</th><td style="font-size: 30px;">' +
+                            terjemahan.data.matches[i].surah.name +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].numberInSurah +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].text +
+                            "</td></tr>";
+                          document.getElementById("myTB").innerHTML += table;
+                        }
                       }
 
                       document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
-                      // document.getElementById("nomor0").textContent = i + 1;
-                      // document.getElementById("surahName0").textContent = terjemahan.data.matches[i].surah.name;
-                      // document.getElementById("ayat0").textContent = terjemahan.data.matches[i].numberInSurah;
-                      // document.getElementById("textTerjemahan0").textContent = terjemahan.data.matches[i].text;
                     }
 
                     const form = document.querySelector("form");
                     form.addEventListener("submit", handleSubmit);
 
                     async function getData() {
-                      var searchText = document.getElementById("keyword").value;
+                      const value = "<%= transcription %>";
 
-                      const response = await fetch(`http://api.alquran.cloud/v1/search/${searchText}/all/id`);
+                      console.log({ value });
+
+                      const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
                       var terjemahan = await response.json();
+                      var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
+                      document.getElementById("myTB").innerHTML = table;
+                      const limit = 250;
 
-                      document.getElementById("nomor0").textContent = 0 + 1;
-                      document.getElementById("surahName0").textContent = terjemahan.data.matches[0].surah.name;
-                      document.getElementById("ayat0").textContent = terjemahan.data.matches[0].numberInSurah;
-                      document.getElementById("textTerjemahan0").textContent = terjemahan.data.matches[0].text;
+                      if (terjemahan.data.matches.length > limit) {
+                        for (let i = 0; i < limit; i++) {
+                          var table =
+                            "<tr><th>" +
+                            (i + 1) +
+                            '</th><td style="font-size: 30px;">' +
+                            terjemahan.data.matches[i].surah.name +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].numberInSurah +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].text +
+                            "</td></tr>";
+                          document.getElementById("myTB").innerHTML += table;
+                        }
+                      } else {
+                        for (let i = 0; i < terjemahan.data.matches.length; i++) {
+                          var table =
+                            "<tr><th>" +
+                            (i + 1) +
+                            '</th><td style="font-size: 30px;">' +
+                            terjemahan.data.matches[i].surah.name +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].numberInSurah +
+                            "</td><td>" +
+                            terjemahan.data.matches[i].text +
+                            "</td></tr>";
+                          document.getElementById("myTB").innerHTML += table;
+                        }
+                      }
 
                       document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
 
