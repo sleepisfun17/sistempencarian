@@ -1,20 +1,72 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const fs = require("fs");
+const recorder = require("node-record-lpcm16");
+const AudioRecorder = require("node-audiorecorder");
+// Imports the Google Cloud client library
+const speech = require("@google-cloud/speech");
+// import fetch from "node-fetch";
+// fungsi api key
+// Imports the Google Cloud client library.
+// const { Storage } = require("@google-cloud/storage");
 
-//fungsi transkrip audio to text
+// // Instantiates a client. Explicitly use service account credentials by
+// // specifying the private key file. All clients in google-cloud-node have this
+// // helper, see https://github.com/GoogleCloudPlatform/google-cloud-node/blob/master/docs/authentication.md
+// const projectId = "sistem-pencarian-345108";
+// const keyFilename = "C:/Users/MIrfanFanani/Documents/gapikey/sistem-pencarian-345108-9b49db4a2de5.json";
+// const storage = new Storage({ projectId, keyFilename });
+
+// // Makes an authenticated API request.
+// async function listBuckets() {
+//   try {
+//     const [buckets] = await storage.getBuckets();
+
+//     console.log("Buckets:");
+//     buckets.forEach((bucket) => {
+//       console.log(bucket.name);
+//     });
+//   } catch (err) {
+//     console.error("ERROR:", err);
+//   }
+// }
+// listBuckets();
+
+// fungsi rekaman audio
+function getRecord() {
+  const file = fs.createWriteStream("record.wav", { encoding: "binary" });
+
+  const recording = recorder.record();
+  recording.stream().pipe(file);
+
+  setTimeout(() => {
+    recording.stop().pipe(file);
+  }, 3000);
+}
+
+function getRecordTwo() {
+  const fileStream = fs.createWriteStream("record.wav", { encoding: "binary" });
+
+  const audioRecorder = new AudioRecorder(
+    {
+      program: "sox",
+      silence: 0,
+    },
+    console
+  );
+
+  audioRecorder.start().stream().pipe(fileStream);
+  setTimeout(() => {
+    audioRecorder.stop();
+  }, 3000);
+}
+
+// fungsi transkrip audio to text
 async function getTranscript() {
-  // Imports the Google Cloud client library
-  const fs = require("fs");
-  const speech = require("@google-cloud/speech");
-
-  // Creates a client
   const client = new speech.SpeechClient();
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
-  const filename = "rumahtangga.wav";
+  const filename = "record.wav";
   const encoding = "LINEAR16";
   const sampleRateHertz = 16000;
   const languageCode = "id-ID";
@@ -24,6 +76,7 @@ async function getTranscript() {
     sampleRateHertz: sampleRateHertz,
     languageCode: languageCode,
   };
+
   const audio = {
     content: fs.readFileSync(filename).toString("base64"),
   };
@@ -40,8 +93,6 @@ async function getTranscript() {
   this.transcription = transcription;
 }
 
-getTranscript();
-
 //use ejs
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -49,17 +100,25 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Sopipi Tuhandred Aikyu",
-    transcription,
   });
 });
 
-// app.post("/", (req, res) => {
-//   // const search = document.getElementById("search").value;
-//   console.log(req.body.search);
-// });
+app.get("/record", (req, res) => {
+  res.render("record", {
+    title: "Rekam Suara",
+  });
+  getRecordTwo();
+});
 
 app.get("/result", (req, res) => {
-  res.render("result", { title: "Hasil Pencarian" });
+  async function mainResult() {
+    await getTranscript();
+    res.render("result", {
+      title: "Hasil Pencarian",
+      transcription,
+    });
+  }
+  mainResult();
 });
 
 app.listen(port, () => {

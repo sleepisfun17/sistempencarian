@@ -1,3 +1,6 @@
 node_modules/
 contacts.js
 search.js
+*.wav
+function.js
+asr.js

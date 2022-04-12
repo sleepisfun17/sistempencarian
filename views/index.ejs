@@ -11,12 +11,15 @@
   </head>
   <body>
     <div class="s006">
-      <form action="result">
+      <form action="">
         <fieldset>
-          <legend style="color: black">Masukkan kata yang ingin anda cari.</legend>
+          <legend style="color: black">
+            Tekan tombol untuk merekam suara anda. <br />
+            Sebutkan kata yang ingin anda cari.
+          </legend>
           <div class="inner-form">
             <div class="input-field">
-              <button id="myBtn" class="btn-search" type="button" onclick="getData()">
+              <button id="myBtn" class="btn-search" type="button" onclick="location.href='record'">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path
                     d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
@@ -24,43 +27,10 @@
                 </svg>
               </button>
               <input id="keyword" type="text" name="keyword" />
-              <!-- <audio id="player" controls></audio>
-              <script>
-                const player = document.getElementById("player");
-
-                const handleSuccess = function (stream) {
-                  if (window.URL) {
-                    player.srcObject = stream;
-                  } else {
-                    player.src = stream;
-                  }
-                };
-
-                navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
-              </script> -->
+              
             </div>
-
-            <div class="container mt-4">
-              <div class="row">
-                <div class="col-12">
-                  <h2>
-                    Daftar Surat dan Ayat <%= transcription %>:
-                    <h5 id="jumlahTerjemahan" style=""></h5>
-                  </h2>
-
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Surat</th>
-                        <th scope="col">Ayat</th>
-                        <th scope="col">Detail</th>
-                      </tr>
-                    </thead>
-                    <tbody id="myTB"></tbody>
-                  </table>
-
-                  <script>
+            
+                  <!-- <script>
                     async function handleSubmit(event) {
                       event.preventDefault();
 
@@ -111,53 +81,7 @@
 
                     const form = document.querySelector("form");
                     form.addEventListener("submit", handleSubmit);
-
-                    async function getData() {
-                      const value = "<%= transcription %>";
-
-                      console.log({ value });
-
-                      const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
-                      var terjemahan = await response.json();
-                      var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
-                      document.getElementById("myTB").innerHTML = table;
-                      const limit = 250;
-
-                      if (terjemahan.data.matches.length > limit) {
-                        for (let i = 0; i < limit; i++) {
-                          var table =
-                            "<tr><th>" +
-                            (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].numberInSurah +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].text +
-                            "</td></tr>";
-                          document.getElementById("myTB").innerHTML += table;
-                        }
-                      } else {
-                        for (let i = 0; i < terjemahan.data.matches.length; i++) {
-                          var table =
-                            "<tr><th>" +
-                            (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].numberInSurah +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].text +
-                            "</td></tr>";
-                          document.getElementById("myTB").innerHTML += table;
-                        }
-                      }
-
-                      document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
-
-                      getData();
-                    }
-                  </script>
+                  </script> -->
                 </div>
               </div>
             </div>
