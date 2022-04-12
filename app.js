@@ -41,25 +41,8 @@ function getRecord() {
   recording.stream().pipe(file);
 
   setTimeout(() => {
-    recording.stop().pipe(file);
-  }, 3000);
-}
-
-function getRecordTwo() {
-  const fileStream = fs.createWriteStream("record.wav", { encoding: "binary" });
-
-  const audioRecorder = new AudioRecorder(
-    {
-      program: "sox",
-      silence: 0,
-    },
-    console
-  );
-
-  audioRecorder.start().stream().pipe(fileStream);
-  setTimeout(() => {
-    audioRecorder.stop();
-  }, 3000);
+    file.end();
+  }, 4000);
 }
 
 // fungsi transkrip audio to text
@@ -107,7 +90,7 @@ app.get("/record", (req, res) => {
   res.render("record", {
     title: "Rekam Suara",
   });
-  getRecordTwo();
+  getRecord();
 });
 
 app.get("/result", (req, res) => {
