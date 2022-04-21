@@ -13,7 +13,7 @@
 
     <title><%= title %></title>
   </head>
-  <body onload="getData()">
+  <body onload="main()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Sistem Pencarian Terjemahan Al-Qur'an</a>
@@ -32,7 +32,7 @@
             <h5 id="jumlahTerjemahan" style=""></h5>
           </h2>
 
-          <table class="table">
+          <table class="table" id="box">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -51,9 +51,11 @@
         const value = "<%= transcription %>";
 
         console.log({ value });
-
+        console.time("API Fetch");
         const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
         var terjemahan = await response.json();
+        console.timeEnd("API Fetch");
+
         var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
         document.getElementById("myTB").innerHTML = table;
         const limit = 250;
@@ -71,10 +73,24 @@
             document.getElementById("myTB").innerHTML += table;
           }
         }
-
         document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " ayat";
+      }
 
-        getData();
+      function highlightText() {
+        const $box = document.getElementById("box");
+        const searchText = "<%= transcription %>";
+        const regex = new RegExp(searchText, "gi");
+
+        let text = $box.innerHTML;
+        text = text.replace(/(<mark style="background-color: #ffd700; padding: 0em">|<\/mark>)/gim, "");
+
+        const newText = text.replace(regex, '<mark style="background-color: #ffd700; padding: 0em">$&</mark>');
+        $box.innerHTML = newText;
+      }
+
+      async function main() {
+        await getData();
+        highlightText();
       }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
