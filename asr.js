@@ -1,50 +1,33 @@
-function getMicInput() {
-  const recorder = require("node-record-lpcm16");
+const speech = require("@google-cloud/speech");
+const fs = require("fs");
 
-  // Imports the Google Cloud client library
-  const speech = require("@google-cloud/speech");
-
-  // Creates a client
+async function getTranscript() {
   const client = new speech.SpeechClient();
 
-  /**
-   * TODO(developer): Uncomment the following lines before running the sample.
-   */
+  const filename = "record.wav";
   const encoding = "LINEAR16";
   const sampleRateHertz = 16000;
   const languageCode = "id-ID";
 
-  const request = {
-    config: {
-      encoding: encoding,
-      sampleRateHertz: sampleRateHertz,
-      languageCode: languageCode,
-    },
-    interimResults: false, // If you want interim results, set this to true
+  const config = {
+    encoding: encoding,
+    sampleRateHertz: sampleRateHertz,
+    languageCode: languageCode,
   };
 
-  // Create a recognize stream
-  const recognizeStream = client
-    .streamingRecognize(request)
-    .on("error", console.error)
-    .on("data", (data) => process.stdout.write(data.results[0] && data.results[0].alternatives[0] ? `Transcription: ${data.results[0].alternatives[0].transcript}\n` : "\n\nReached transcription time limit, press Ctrl+C\n"));
+  const audio = {
+    content: fs.readFileSync(filename).toString("base64"),
+  };
 
-  // Start recording and send the microphone input to the Speech API.
-  // Ensure SoX is installed, see https://www.npmjs.com/package/node-record-lpcm16#dependencies
-  recorder
-    .record({
-      sampleRateHertz: sampleRateHertz,
-      threshold: 0,
-      // Other options, see https://www.npmjs.com/package/node-record-lpcm16#options
-      verbose: false,
-      recordProgram: "rec", // Try also "arecord" or "sox"
-      silence: "10.0",
-    })
-    .stream()
-    .on("error", console.error)
-    .pipe(recognizeStream);
+  const request = {
+    config: config,
+    audio: audio,
+  };
 
-  console.log("Listening, press Ctrl+C to stop.");
+  // Detects speech in the audio file
+  const [response] = await client.recognize(request);
+  const transcription = response.results.map((result) => result.alternatives[0].transcript).join("\n");
+  console.log("Transcription: ", transcription);
 }
 
-getMicInput();
+getTranscript();

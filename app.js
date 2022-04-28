@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+// const port = 3000;
 const fs = require("fs");
 const recorder = require("node-record-lpcm16");
 const AudioRecorder = require("node-audiorecorder");
@@ -20,7 +20,7 @@ function getRecord() {
 
   setTimeout(() => {
     file.end();
-  }, 4000);
+  }, 5000);
 }
 
 // fungsi transkrip audio to text
@@ -68,7 +68,7 @@ app.get("/record", (req, res) => {
   res.render("record", {
     title: "Rekam Suara",
   });
-  // getRecord();
+  getRecord();
 });
 
 app.get("/result", (req, res) => {
@@ -83,6 +83,10 @@ app.get("/result", (req, res) => {
   mainResult();
 });
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 app.listen(port, () => {
   console.log(`Sistem Pencarian is listening on port ${port}`);
 });

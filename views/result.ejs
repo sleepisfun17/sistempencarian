@@ -63,13 +63,29 @@
         if (terjemahan.data.matches.length > limit) {
           for (let i = 0; i < limit; i++) {
             var table =
-              "<tr><th>" + (i + 1) + '</th><td style="font-size: 30px;">' + terjemahan.data.matches[i].surah.name + "</td><td>" + terjemahan.data.matches[i].numberInSurah + "</td><td>" + terjemahan.data.matches[i].text + "</td></tr>";
+              "<tr><th>" +
+              (i + 1) +
+              "</th><td style='font-weight:bold'>" +
+              terjemahan.data.matches[i].surah.englishName +
+              "</td><td>" +
+              terjemahan.data.matches[i].numberInSurah +
+              "</td><td>" +
+              terjemahan.data.matches[i].text +
+              "</td></tr>";
             document.getElementById("myTB").innerHTML += table;
           }
         } else {
           for (let i = 0; i < terjemahan.data.matches.length; i++) {
             var table =
-              "<tr><th>" + (i + 1) + '</th><td style="font-size: 30px;">' + terjemahan.data.matches[i].surah.name + "</td><td>" + terjemahan.data.matches[i].numberInSurah + "</td><td>" + terjemahan.data.matches[i].text + "</td></tr>";
+              "<tr><th>" +
+              (i + 1) +
+              "</th><td style='font-weight:bold'>" +
+              terjemahan.data.matches[i].surah.englishName +
+              "</td><td>" +
+              terjemahan.data.matches[i].numberInSurah +
+              "</td><td>" +
+              terjemahan.data.matches[i].text +
+              "</td></tr>";
             document.getElementById("myTB").innerHTML += table;
           }
         }
