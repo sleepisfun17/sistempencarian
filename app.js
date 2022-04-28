@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-// const port = 3000;
+const port = process.env.PORT || 3000;
 const fs = require("fs");
 const recorder = require("node-record-lpcm16");
 const AudioRecorder = require("node-audiorecorder");
@@ -83,10 +83,6 @@ app.get("/result", (req, res) => {
   mainResult();
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8000;
-}
 app.listen(port, () => {
   console.log(`Sistem Pencarian is listening on port ${port}`);
 });
