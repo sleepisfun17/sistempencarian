@@ -27,10 +27,7 @@
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-12">
-          <h2>
-            Daftar Surat dan Ayat: <%= transcription %>
-            <h5 id="jumlahTerjemahan" style=""></h5>
-          </h2>
+          <h2>Daftar Surat dan Ayat yang mengandung kata <b style="text-transform: uppercase"><%= transcription %></b>: <span id="jumlahTerjemahan" style=""></span></h2>
 
           <table class="table" id="box">
             <thead>
@@ -89,7 +86,7 @@
             document.getElementById("myTB").innerHTML += table;
           }
         }
-        document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " ayat";
+        document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " AYAT";
       }
 
       function highlightText() {
