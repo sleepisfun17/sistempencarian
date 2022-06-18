@@ -48,7 +48,7 @@
                     <span id="jumlahTerjemahan" style=""></span>
                   </h2>
 
-                  <table class="table">
+                  <table class="table" id="box">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -81,8 +81,8 @@
                           var table =
                             "<tr><th>" +
                             (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
+                            "</th><td style='font-weight:bold'>" +
+                            terjemahan.data.matches[i].surah.englishName +
                             "</td><td>" +
                             terjemahan.data.matches[i].numberInSurah +
                             "</td><td>" +
@@ -95,8 +95,8 @@
                           var table =
                             "<tr><th>" +
                             (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
+                            "</th><td style='font-weight:bold'>" +
+                            terjemahan.data.matches[i].surah.englishName +
                             "</td><td>" +
                             terjemahan.data.matches[i].numberInSurah +
                             "</td><td>" +
@@ -105,58 +105,21 @@
                           document.getElementById("myTB").innerHTML += table;
                         }
                       }
+                      document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " AYAT";
 
-                      document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
+                      const $box = document.getElementById("box");
+                      const searchText = value;
+                      const regex = new RegExp(searchText, "gi");
+
+                      let text = $box.innerHTML;
+                      text = text.replace(/(<mark style="background-color: #ffd700; padding: 0em">|<\/mark>)/gim, "");
+
+                      const newText = text.replace(regex, '<mark style="background-color: #ffd700; padding: 0em">$&</mark>');
+                      $box.innerHTML = newText;
                     }
 
                     const form = document.querySelector("form");
                     form.addEventListener("submit", handleSubmit);
-
-                    async function getData() {
-                      const value = "";
-
-                      console.log({ value });
-
-                      const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
-                      var terjemahan = await response.json();
-                      var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
-                      document.getElementById("myTB").innerHTML = table;
-                      const limit = 1000;
-
-                      if (terjemahan.data.matches.length > limit) {
-                        for (let i = 0; i < limit; i++) {
-                          var table =
-                            "<tr><th>" +
-                            (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].numberInSurah +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].text +
-                            "</td></tr>";
-                          document.getElementById("myTB").innerHTML += table;
-                        }
-                      } else {
-                        for (let i = 0; i < terjemahan.data.matches.length; i++) {
-                          var table =
-                            "<tr><th>" +
-                            (i + 1) +
-                            '</th><td style="font-size: 30px;">' +
-                            terjemahan.data.matches[i].surah.name +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].numberInSurah +
-                            "</td><td>" +
-                            terjemahan.data.matches[i].text +
-                            "</td></tr>";
-                          document.getElementById("myTB").innerHTML += table;
-                        }
-                      }
-
-                      document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length;
-
-                      getData();
-                    }
                   </script>
                 </div>
               </div>
