@@ -28,6 +28,8 @@
       <div class="row">
         <div class="col-md-12">
           <h2>Daftar Surat dan Ayat yang mengandung kata <b style="text-transform: uppercase"><%= transcription %></b>: <span id="jumlahTerjemahan" style=""></span></h2>
+          <h5 style="font-size: 13px">Waktu Fetch API: <span id="fetchTime"></span></h5>
+          <h5 style="font-size: 13px">Waktu Load Page: <span id="pageLoadTime"></span></h5>
 
           <table class="table" id="box">
             <thead>
@@ -48,14 +50,17 @@
         const value = "<%= transcription %>";
 
         console.log({ value });
-        console.time("API Fetch");
+        // console.time("API Fetch");
+        var apifetch0 = performance.now();
         const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
         var terjemahan = await response.json();
-        console.timeEnd("API Fetch");
+        var apifetch1 = performance.now();
+        // console.timeEnd("API Fetch");
 
+        var pageload0 = performance.now();
         var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
         document.getElementById("myTB").innerHTML = table;
-        const limit = 250;
+        const limit = 1000;
 
         if (terjemahan.data.matches.length > limit) {
           for (let i = 0; i < limit; i++) {
@@ -86,7 +91,10 @@
             document.getElementById("myTB").innerHTML += table;
           }
         }
+        var pageload1 = performance.now();
         document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " AYAT";
+        document.getElementById("fetchTime").textContent = (apifetch1 - apifetch0) / 1000 + "s";
+        document.getElementById("pageLoadTime").textContent = (pageload1 - pageload0) / 1000 + "s";
       }
 
       function highlightText() {
