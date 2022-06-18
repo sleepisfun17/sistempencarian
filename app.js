@@ -40,7 +40,7 @@ async function getTranscript() {
   this.transcription = transcription;
 }
 
-getTranscript();
+// getTranscript();
 
 //use ejs
 app.set("view engine", "ejs");
@@ -49,7 +49,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Sopipi Tuhandred Aikyu",
-    transcription,
+    // transcription,
   });
 });
 
