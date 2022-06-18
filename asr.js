@@ -1,4 +1,4 @@
-function getMicInput() {
+async function getMicInput() {
   const recorder = require("node-record-lpcm16");
 
   // Imports the Google Cloud client library
