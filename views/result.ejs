@@ -44,6 +44,7 @@
           <button type="button" class="btn btn-primary" onclick="location.href='record'">Cari Lagi</button>
         </div>
         <div class="col-md-12">
+          <h5 style="font-size: 13px">Waktu Transkripsi: <span id="transcriptionTime"></span></h5>
           <h5 style="font-size: 13px">Waktu Fetch API: <span id="fetchTime"></span></h5>
           <h5 style="font-size: 13px">Waktu Load Page: <span id="pageLoadTime"></span></h5>
           <h5 style="font-size: 13px">Waktu Total: <span id="totalTime"></span></h5>
@@ -109,10 +110,16 @@
           }
         }
         var pageload1 = performance.now();
+
+        var transcriptionTime = Number("<%= transcriptionTime %>");
+        var roundedTranscriptionTime = transcriptionTime.toFixed(3);
+        var totalTime = transcriptionTime + (apifetch1 - apifetch0) / 1000 + (pageload1 - pageload0) / 1000;
+        var roundedTotal = totalTime.toFixed(3);
         document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " AYAT";
+        document.getElementById("transcriptionTime").textContent = roundedTranscriptionTime + "s";
         document.getElementById("fetchTime").textContent = (apifetch1 - apifetch0) / 1000 + "s";
         document.getElementById("pageLoadTime").textContent = (pageload1 - pageload0) / 1000 + "s";
-        document.getElementById("totalTime").textContent = (apifetch1 - apifetch0) / 1000 + (pageload1 - pageload0) / 1000 + "s";
+        document.getElementById("totalTime").textContent = roundedTotal + "s";
       }
 
       function highlightText() {

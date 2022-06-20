@@ -69,10 +69,14 @@ app.get("/record", (req, res) => {
 
 app.get("/result", (req, res) => {
   async function mainResult() {
+    var transcriptionTime0 = performance.now();
     await getTranscript();
+    var transcriptionTime1 = performance.now();
+    var transcriptionTime = (transcriptionTime1 - transcriptionTime0) / 1000;
     res.render("result", {
       title: "Hasil Pencarian",
       transcription,
+      transcriptionTime,
     });
   }
 
