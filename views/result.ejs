@@ -11,9 +11,20 @@
     <!-- Bootsrap Icon -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
 
+    <!-- WA Float Button -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+    <!-- cutsom CSS -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
     <title><%= title %></title>
   </head>
-  <body>
+  <body onload="main()">
+    <!-- Floating Button -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <a href="record" class="float">
+      <i class="fa fa-microphone my-float"></i>
+    </a>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Sistem Pencarian Terjemahan Al-Qur'an</a>
@@ -26,33 +37,115 @@
 
     <div class="container mt-4">
       <div class="row">
-        <div class="col-md-12">
-          <h2>Daftar Surat dan Ayat</h2>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Surat</th>
-                <th scope="col">Ayat</th>
-                <th scope="col">Detail</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Alkohol</td>
-                <td>99</td>
-                <td>Detail ayat</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-md-10">
+          <h2>Daftar Surat dan Ayat yang mengandung kata <b style="text-transform: uppercase"><%= transcription %></b>: <span id="jumlahTerjemahan" style=""></span></h2>
+        </div>
+        <div class="col-md-2" style="margin: auto; text-align: center">
+          <button type="button" class="btn btn-primary" onclick="location.href='record'">Cari Lagi</button>
+        </div>
+        <div class="col-md-3">
+          <h5 style="font-size: 13px">Waktu Transkripsi (s): </h5>
+          <h5 style="font-size: 13px">Waktu Fetch API (s): </h5>
+          <h5 style="font-size: 13px">Waktu Load Page (s): </span></h5>
+          <h5 style="font-size: 13px">Waktu Total (s): </h5>
+        </div>
+        <div class="col-md-3">
+          <h5 style="font-size: 13px" id="transcriptionTime"></h5>
+          <h5 style="font-size: 13px" id="fetchTime"></h5>
+          <h5 style="font-size: 13px" id="pageLoadTime">
+          <h5 style="font-size: 13px" id="totalTime"></h5>
         </div>
       </div>
+      <table class="table" id="box">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Surat</th>
+            <th scope="col">Ayat</th>
+            <th scope="col">Detail</th>
+          </tr>
+        </thead>
+        <tbody id="myTB"></tbody>
+      </table>
     </div>
+
     <script>
-      const params = new URLSearchParams(window.location.search);
-      params.get("name");
-      console.log(params);
+      var transcriptionTime = Number("<%= transcriptionTime %>");
+      var roundedTranscriptionTime = transcriptionTime.toFixed(3);
+      document.getElementById("transcriptionTime").textContent = roundedTranscriptionTime;
+
+      async function getData() {
+        const value = "<%= transcription %>";
+
+        console.log({ value });
+        // console.time("API Fetch");
+        var apifetch0 = performance.now();
+        const response = await fetch(`http://api.alquran.cloud/v1/search/${value}/all/id`);
+        var terjemahan = await response.json();
+        var apifetch1 = performance.now();
+        // console.timeEnd("API Fetch");
+
+        var pageload0 = performance.now();
+        var table = "<tr><th>" + "</th><td>" + "</td><td>" + "</td><td>" + "</td></tr>";
+        document.getElementById("myTB").innerHTML = table;
+        const limit = 1000;
+
+        if (terjemahan.data.matches.length > limit) {
+          for (let i = 0; i < limit; i++) {
+            var table =
+              "<tr><th>" +
+              (i + 1) +
+              "</th><td style='font-weight:bold'>" +
+              terjemahan.data.matches[i].surah.englishName +
+              "</td><td>" +
+              terjemahan.data.matches[i].numberInSurah +
+              "</td><td>" +
+              terjemahan.data.matches[i].text +
+              "</td></tr>";
+            document.getElementById("myTB").innerHTML += table;
+          }
+        } else {
+          for (let i = 0; i < terjemahan.data.matches.length; i++) {
+            var table =
+              "<tr><th>" +
+              (i + 1) +
+              "</th><td style='font-weight:bold'>" +
+              terjemahan.data.matches[i].surah.englishName +
+              "</td><td>" +
+              terjemahan.data.matches[i].numberInSurah +
+              "</td><td>" +
+              terjemahan.data.matches[i].text +
+              "</td></tr>";
+            document.getElementById("myTB").innerHTML += table;
+          }
+        }
+        var pageload1 = performance.now();
+
+        var totalTime = transcriptionTime + (apifetch1 - apifetch0) / 1000 + (pageload1 - pageload0) / 1000;
+        var roundedTotal = totalTime.toFixed(3);
+        document.getElementById("jumlahTerjemahan").textContent = terjemahan.data.matches.length + " AYAT";
+        document.getElementById("transcriptionTime").textContent = roundedTranscriptionTime;
+        document.getElementById("fetchTime").textContent = (apifetch1 - apifetch0) / 1000;
+        document.getElementById("pageLoadTime").textContent = (pageload1 - pageload0) / 1000;
+        document.getElementById("totalTime").textContent = roundedTotal;
+      }
+
+      function highlightText() {
+        const $box = document.getElementById("box");
+        const searchText = "<%= transcription %>";
+        const regex = new RegExp(searchText, "gi");
+
+        let text = $box.innerHTML;
+        text = text.replace(/(<mark style="background-color: #ffd700; padding: 0em">|<\/mark>)/gim, "");
+
+        const newText = text.replace(regex, '<mark style="background-color: #ffd700; padding: 0em">$&</mark>');
+        $box.innerHTML = newText;
+      }
+
+      async function main() {
+        await getData();
+        highlightText();
+      }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
